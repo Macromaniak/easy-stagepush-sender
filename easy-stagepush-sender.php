@@ -62,7 +62,7 @@ $dev_url = ESPS_Settings::get_option('dev_url');
         'yoast_meta'  => esps_get_yoast_meta($post_id),
     ];
 
-    $response = wp_remote_post(trailingslashit($prod_url) . 'wp-json/dev-sync/v1/import-post', [
+    $response = wp_remote_post(trailingslashit($prod_url) . 'wp-json/esps-sync/v1/import-post', [
         'headers' => ['Content-Type' => 'application/json'],
         'body' => json_encode($payload),
         'timeout' => 20
