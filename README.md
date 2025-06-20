@@ -6,7 +6,7 @@
 
 ## ⚙️ How It Works
 
-When a post of a selected type is published or updated and marked with a checkbox, the plugin sends the post and all associated data to the production site where it is received and saved using the companion plugin — [Easy StagePush Receiver](https://github.com/your-org/easy-stagepush-receiver).
+When a post of a selected type is published or updated and marked with a checkbox, the plugin sends the post and all associated data to the production site where it is received and saved using the companion plugin — [Easy StagePush Receiver](https://github.com/Macromaniak/easy-stagepush-receiver).
 
 ---
 
@@ -27,7 +27,7 @@ When a post of a selected type is published or updated and marked with a checkbo
 
 - WordPress 5.0+
 - ACF Pro (if using ACF fields)
-- [Easy StagePush Receiver](https://github.com/your-org/easy-stagepush-receiver) must be installed on the production site
+- [Easy StagePush Receiver](https://github.com/Macromaniak/easy-stagepush-receiver) must be installed on the production site
 
 ---
 
@@ -67,7 +67,7 @@ Feel free to fork this plugin, submit issues, or contribute improvements.
 Have a question or need help?
 
 - Email: anandhu.natesh@gmail.com / anandhu.nadesh@gmail.com
-- GitHub Issues: [Create an issue](https://github.com/Macromaniak/form-submission-manager/issues)
+- GitHub Issues: [Create an issue](https://github.com/Macromaniak/easy-stagepush-sender/issues)
 
 ---
 
