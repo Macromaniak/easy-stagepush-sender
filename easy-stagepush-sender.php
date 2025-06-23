@@ -15,18 +15,24 @@ require_once plugin_dir_path(__FILE__) . 'includes/class-esps-settings.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-esps-meta-box.php';
 add_action('acf/save_post', 'esps_push_to_live_site', 20);
 
-function esps_push_to_live_site($post_id) {
+function esps_push_to_live_site($post_id)
+{
     if (strpos($post_id, 'option') !== false || wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
         return;
     }
 
+    // $allowed_types = ['post', 'page', 'press', 'people', 'testimonial', 'author'];
+
+    // if (!in_array($post->post_type, $allowed_types)) return;
+
+    $meta_key = ESPS_Settings::get_option('meta_key', '_sync_to_prod');
+    if (!get_post_meta($post_id, $meta_key, true)) {
+        return;
+    }
+
     $post = get_post($post_id);
-    $allowed_types = ['post', 'page', 'press', 'people', 'testimonial', 'author'];
 
-    if (!in_array($post->post_type, $allowed_types)) return;
-    if (!get_field('publish_to_live', $post_id)) return;
-
-$dev_url = ESPS_Settings::get_option('dev_url');
+    $dev_url = ESPS_Settings::get_option('dev_url');
     if (empty($dev_url)) {
         $dev_url = get_site_url();
     }
@@ -75,7 +81,8 @@ $dev_url = ESPS_Settings::get_option('dev_url');
     }
 }
 
-function esps_prepare_acf_fields_for_transfer($fields) {
+function esps_prepare_acf_fields_for_transfer($fields)
+{
     foreach ($fields as $key => &$value) {
         if (is_array($value) && isset($value['ID']) && get_post_mime_type($value['ID'])) {
             $file_path = get_post_meta($value['ID'], '_wp_attached_file', true);
@@ -103,13 +110,15 @@ function esps_prepare_acf_fields_for_transfer($fields) {
     return $fields;
 }
 
-function esps_get_original_image_url($image_id) {
+function esps_get_original_image_url($image_id)
+{
     $meta = wp_get_attachment_metadata($image_id);
     $uploads = wp_upload_dir();
     return $meta && isset($meta['file']) ? trailingslashit($uploads['baseurl']) . $meta['file'] : null;
 }
 
-function esps_get_post_taxonomies($post_id, $post_type) {
+function esps_get_post_taxonomies($post_id, $post_type)
+{
     $taxonomies = get_object_taxonomies($post_type);
     $term_data = [];
     foreach ($taxonomies as $taxonomy) {
@@ -121,7 +130,8 @@ function esps_get_post_taxonomies($post_id, $post_type) {
     return $term_data;
 }
 
-function esps_get_yoast_meta($post_id) {
+function esps_get_yoast_meta($post_id)
+{
     $yoast_keys = [
         '_yoast_wpseo_title',
         '_yoast_wpseo_metadesc',
@@ -142,7 +152,8 @@ function esps_get_yoast_meta($post_id) {
     return $meta;
 }
 
-function esps_replace_dev_urls($data, $dev_url, $prod_url) {
+function esps_replace_dev_urls($data, $dev_url, $prod_url)
+{
     foreach ($data as $key => &$value) {
         if (is_string($value) && strpos($value, $dev_url) !== false) {
             $value = str_replace($dev_url, $prod_url, $value);
@@ -157,7 +168,8 @@ function esps_replace_dev_urls($data, $dev_url, $prod_url) {
 add_action('add_meta_boxes', 'esps_add_sync_meta_box');
 add_action('save_post', 'esps_save_sync_meta_box');
 
-function esps_add_sync_meta_box() {
+function esps_add_sync_meta_box()
+{
     if (!ESPS_Settings::get_option('show_meta')) return;
 
     $post_types = ESPS_Settings::get_option('post_types', []);
@@ -173,14 +185,16 @@ function esps_add_sync_meta_box() {
     }
 }
 
-function esps_render_sync_meta_box($post) {
+function esps_render_sync_meta_box($post)
+{
     $meta_key = ESPS_Settings::get_option('meta_key', '_sync_to_prod');
     $value = get_post_meta($post->ID, $meta_key, true);
     wp_nonce_field('esps_sync_meta_nonce', 'esps_sync_meta_nonce_field');
     echo '<label><input type="checkbox" name="esps_sync_meta_checkbox" value="1"' . checked($value, 1, false) . '> Publish to production</label>';
 }
 
-function esps_save_sync_meta_box($post_id) {
+function esps_save_sync_meta_box($post_id)
+{
     if (!isset($_POST['esps_sync_meta_nonce_field']) || !wp_verify_nonce($_POST['esps_sync_meta_nonce_field'], 'esps_sync_meta_nonce')) {
         return;
     }
@@ -197,7 +211,8 @@ function esps_save_sync_meta_box($post_id) {
     }
 }
 
-function esps_admin_notice_missing_prod_url() {
+function esps_admin_notice_missing_prod_url()
+{
     if (!current_user_can('manage_options')) return;
     $prod_url = ESPS_Settings::get_option('prod_url');
     if (empty($prod_url)) {

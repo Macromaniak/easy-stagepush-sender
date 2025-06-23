@@ -19,8 +19,8 @@ class ESPS_Settings {
 
     public function add_settings_page() {
         add_options_page(
-            'Easy StagePush Settings',
-            'StagePush Sender',
+            esc_html('Easy StagePush Settings', 'easy-stagepush-sender'),
+            esc_html('StagePush Sender', 'easy-stagepush-sender'),
             'manage_options',
             'esps-settings',
             [$this, 'render_settings_page']
@@ -32,9 +32,9 @@ class ESPS_Settings {
 
         add_settings_section('esps_main_section', 'Configuration', null, 'esps-settings');
 
-        add_settings_field('prod_url', 'Production Site URL', [$this, 'render_text_field'], 'esps-settings', 'esps_main_section', ['label_for' => 'prod_url']);
-        add_settings_field('dev_url', 'Dev Site URL (optional)', [$this, 'render_text_field'], 'esps-settings', 'esps_main_section', ['label_for' => 'dev_url']);
-        add_settings_field('meta_key', 'Meta Key to Trigger Sync', [$this, 'render_text_field'], 'esps-settings', 'esps_main_section', ['label_for' => 'meta_key']);
+        add_settings_field('prod_url', 'Production Site URL', [$this, 'render_text_field'], 'esps-settings', 'esps_main_section', ['label_for' => 'prod_url', 'placeholder' => '']);
+        add_settings_field('dev_url', 'Dev Site URL (optional)', [$this, 'render_text_field'], 'esps-settings', 'esps_main_section', ['label_for' => 'dev_url', 'placeholder' => '']);
+        add_settings_field('meta_key', 'Meta Key to Trigger Sync', [$this, 'render_text_field'], 'esps-settings', 'esps_main_section', ['label_for' => 'meta_key', 'placeholder' => '_sync_to_prod']);
         add_settings_field('show_meta', 'Show Meta Field in Admin', [$this, 'render_checkbox_field'], 'esps-settings', 'esps_main_section', ['label_for' => 'show_meta']);
         add_settings_field('post_types', 'Post Types to Show Meta Field', [$this, 'render_post_types_multiselect'], 'esps-settings', 'esps_main_section', ['label_for' => 'post_types']);
     }
@@ -68,7 +68,7 @@ class ESPS_Settings {
         $options = get_option($this->option_key);
         $id = $args['label_for'];
         $value = esc_attr($options[$id] ?? '');
-        echo "<input type='text' id='{$id}' name='{$this->option_key}[{$id}]' value='{$value}' class='regular-text' />";
+        echo "<input type='text' id='{$id}' name='{$this->option_key}[{$id}]' value='{$value}' placeholder='{$args['placeholder']}' class='regular-text' />";
     }
 
     public function render_checkbox_field($args) {
@@ -77,7 +77,7 @@ class ESPS_Settings {
         $checked = !empty($options[$id]) ? 'checked' : '';
         echo "<label style='display: inline-flex; align-items: center; gap: 8px;'>
             <input type='checkbox' id='{$id}' name='{$this->option_key}[{$id}]' value='1' {$checked} />
-            <span>Show this field in the post editor</span>
+            <span>" . esc_html('Show this field in the post editor', 'easy-stagepush-sender') . "</span>
         </label>";
     }
 
