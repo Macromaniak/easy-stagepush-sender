@@ -9,19 +9,20 @@ if (!defined('ABSPATH')) exit;
 class ESPS_Meta_Box {
 
     public function __construct() {
-        add_action('add_meta_boxes', [$this, 'add_meta_box']);
-        add_action('save_post', [$this, 'save_meta_box']);
+        add_action('add_meta_boxes', [$this, 'esps_add_sync_meta_box']);
+        add_action('save_post', [$this, 'esps_save_sync_meta_box']);
     }
 
-    public function add_meta_box() {
+    public function esps_add_sync_meta_box() {
         if (!ESPS_Settings::get_option('show_meta')) return;
 
         $post_types = ESPS_Settings::get_option('post_types', []);
+        $meta_key = ESPS_Settings::get_option('meta_key', '_sync_to_prod');
         foreach ($post_types as $post_type) {
             add_meta_box(
-                'esps_sync_meta',
-                'Publish to Production',
-                [$this, 'render_meta_box'],
+                $meta_key,
+                esc_html('Publish to Production', 'easy-stagepush-sender'),
+                [$this, 'esps_render_sync_meta_box'],
                 $post_type,
                 'side',
                 'high'
@@ -29,15 +30,17 @@ class ESPS_Meta_Box {
         }
     }
 
-    public function render_meta_box($post) {
+    public function esps_render_sync_meta_box($post) {
         $meta_key = ESPS_Settings::get_option('meta_key', '_sync_to_prod');
         $value = get_post_meta($post->ID, $meta_key, true);
+        
         wp_nonce_field('esps_sync_meta_nonce', 'esps_sync_meta_nonce_field');
-        echo '<label><input type="checkbox" name="esps_sync_meta_checkbox" value="1"' . checked($value, 1, false) . '> Publish to production</label>';
+        echo '<label><input type="checkbox" name="esps_sync_meta_checkbox" value="1"' . esc_attr($value === '1' ? 'checked' : '') . '> ' . esc_html__('Publish to production', 'easy-stagepush-sender') . '</label>';
+
     }
 
-    public function save_meta_box($post_id) {
-        if (!isset($_POST['esps_sync_meta_nonce_field']) || !wp_verify_nonce($_POST['esps_sync_meta_nonce_field'], 'esps_sync_meta_nonce')) {
+    public function esps_save_sync_meta_box($post_id) {
+        if (!isset($_POST['esps_sync_meta_nonce_field']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['esps_sync_meta_nonce_field'])), 'esps_sync_meta_nonce')) {
             return;
         }
 

@@ -11,6 +11,8 @@ License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Text Domain: easy-stagepush-sender
 */
 
+if (!defined('ABSPATH')) exit;
+
 require_once plugin_dir_path(__FILE__) . 'includes/class-esps-settings.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-esps-meta-box.php';
 add_action('acf/save_post', 'esps_push_to_live_site', 20);
@@ -162,53 +164,6 @@ function esps_replace_dev_urls($data, $dev_url, $prod_url)
         }
     }
     return $data;
-}
-
-// Meta box for "Publish to Production"
-add_action('add_meta_boxes', 'esps_add_sync_meta_box');
-add_action('save_post', 'esps_save_sync_meta_box');
-
-function esps_add_sync_meta_box()
-{
-    if (!ESPS_Settings::get_option('show_meta')) return;
-
-    $post_types = ESPS_Settings::get_option('post_types', []);
-    foreach ($post_types as $post_type) {
-        add_meta_box(
-            'esps_sync_meta',
-            'Publish to Production',
-            'esps_render_sync_meta_box',
-            $post_type,
-            'side',
-            'high'
-        );
-    }
-}
-
-function esps_render_sync_meta_box($post)
-{
-    $meta_key = ESPS_Settings::get_option('meta_key', '_sync_to_prod');
-    $value = get_post_meta($post->ID, $meta_key, true);
-    wp_nonce_field('esps_sync_meta_nonce', 'esps_sync_meta_nonce_field');
-    echo '<label><input type="checkbox" name="esps_sync_meta_checkbox" value="1"' . checked($value, 1, false) . '> Publish to production</label>';
-}
-
-function esps_save_sync_meta_box($post_id)
-{
-    if (!isset($_POST['esps_sync_meta_nonce_field']) || !wp_verify_nonce($_POST['esps_sync_meta_nonce_field'], 'esps_sync_meta_nonce')) {
-        return;
-    }
-
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-    if (!current_user_can('edit_post', $post_id)) return;
-
-    $meta_key = ESPS_Settings::get_option('meta_key', '_sync_to_prod');
-
-    if (isset($_POST['esps_sync_meta_checkbox'])) {
-        update_post_meta($post_id, $meta_key, 1);
-    } else {
-        delete_post_meta($post_id, $meta_key);
-    }
 }
 
 function esps_admin_notice_missing_prod_url()
