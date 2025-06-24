@@ -15,13 +15,18 @@ if (!defined('ABSPATH')) exit;
 
 require_once plugin_dir_path(__FILE__) . 'includes/class-esps-settings.php';
 require_once plugin_dir_path(__FILE__) . 'includes/class-esps-meta-box.php';
-add_action('acf/save_post', 'esps_push_to_live_site', 20);
+// add_action('acf/save_post', 'esps_push_to_live_site', 20);
+add_action('save_post', 'esps_push_to_live_site', 20, 2);
+
 
 function esps_push_to_live_site($post_id)
 {
-    if (strpos($post_id, 'option') !== false || wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
-        return;
-    }
+    // if (strpos($post_id, 'option') !== false || wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
+    //     return;
+    // }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) return;
 
     // $allowed_types = ['post', 'page', 'press', 'people', 'testimonial', 'author'];
 
