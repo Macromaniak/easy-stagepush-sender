@@ -1,13 +1,13 @@
 === Easy StagePush Sender ===
 Contributors: anandhunadesh, phaseswpdev
-Tags: publishing, content-sync, acf, media, dev-to-live, migration, staging
+Tags: content-sync, acf, media, dev-to-live, migration
 Requires at least: 6.3
 Tested up to: 6.8
 Stable tag: 1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-Push posts, pages, and custom content from your staging or development WordPress site to your production site with a single click—includes ACF fields, media, taxonomies, and SEO metadata.
+Push posts, pages, custom content, ACF fields, media, taxonomies & SEO from staging to production with one click.
 
 === Description ===
 
