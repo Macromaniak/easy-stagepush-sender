@@ -1,71 +1,76 @@
 === Easy StagePush Sender ===
 Contributors: anandhunadesh, phaseswpdev
-Tags: publishing, content-sync, acf, media, dev-to-live
+Tags: publishing, content-sync, acf, media, dev-to-live, migration, staging
 Requires at least: 6.3
 Tested up to: 6.8
-Stable tag: 1.0
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
-A simple plugin to manage automatic publishing of posts, pages, and custom content from a staging/dev WordPress site to a production site.
+Push posts, pages, and custom content from your staging or development WordPress site to your production site with a single click—includes ACF fields, media, taxonomies, and SEO metadata.
 
 === Description ===
 
-Easy StagePush Sender is a powerful WordPress plugin that allows you to push content — including ACF fields, media files, featured images, taxonomy terms, and SEO metadata — directly from your development or staging site to your live site with a single click.
+**Easy StagePush Sender** lets you safely and easily migrate content — including ACF fields, media files, featured images, taxonomy terms, and SEO metadata — directly from your staging/dev site to your production site. 
 
-The plugin adds a meta checkbox to selected post types. When checked, and the post is published or updated, the post is automatically pushed to the production environment via REST API.
+A “Push to Live” button appears in the editor sidebar for all supported post types. When you click the button, the plugin instantly transfers the post, including all custom fields and media references, to your live site using a secure REST API endpoint.
 
-This plugin is intended to be used in tandem with the [Easy StagePush Receiver](https://wordpress.org/plugins/easy-stagepush-receiver/) plugin, which must be installed on the live site to receive the pushed content.
+This plugin is designed to work with the [Easy StagePush Receiver](https://wordpress.org/plugins/easy-stagepush-receiver/) plugin, which must be installed on your production site to receive the content.
 
-**Important:** This plugin assumes your production site is a structural mirror of your development site. That means all custom post types, taxonomies, and ACF field groups used in the dev site must also exist and be registered on the production site. This plugin does not create post types, taxonomies, or field groups — it only pushes content and metadata.
+**Important:** Your production site should have the same post types, taxonomies, and ACF field groups as your staging/dev site. This plugin does not register or sync post type or field definitions—it only pushes content and metadata.
 
 === Features ===
 
-* Push posts, pages, and custom post types (CPTs) from dev to production
-* Supports ACF Flexible Content Fields, Relationships, Repeaters, Groups
-* Includes featured images and other media without duplication
-* Syncs taxonomy terms (including custom taxonomies)
-* Includes Yoast SEO meta fields
+* Manual “Push to Live” button for posts, pages, and custom post types (CPTs)
+* One-click transfer of all post content, including ACF Flexible Content, Relationships, Repeaters, and Groups
+* Seamless handling of featured images and other media (no duplication)
+* Taxonomy and term synchronization (including custom taxonomies)
+* Yoast SEO metadata transfer
 * Respects page templates and parent/child hierarchies
-* Supports file and SVG field types
-* Customizable settings panel to control sync options and endpoints
+* Supports scheduled posts, files, SVGs, and more
+* Customizable settings panel for site URL and allowed post types
 
 === Usage ===
 
-1. Install and activate **Easy StagePush Sender** on your development/staging WordPress site.
-2. Install and activate **Easy StagePush Receiver** on your live/production WordPress site.
-3. Configure sender settings in Settings → StagePush.
+1. **Install and activate** Easy StagePush Sender on your development/staging WordPress site.
+2. **Install and activate** Easy StagePush Receiver on your live/production WordPress site.
+3. Go to **Settings → StagePush** on your dev/staging site:
    - Enter the production site URL.
-   - Select which post types should support syncing.
-   - Enable or disable the meta checkbox visibility.
-4. Edit a post or page of a supported type, check "Publish to Production", and click "Update" or "Publish".
-5. The content, ACF data, media, and metadata will be automatically pushed to your live site.
+   - (Optional) Enter the dev/staging site URL for automatic URL replacement.
+   - Select the post types you want to enable for pushing.
+4. Edit a post, page, or custom post type.
+5. Click the **Push to Live** button in the editor’s sidebar meta box.
+6. Your post’s content, ACF data, media references, taxonomy, and SEO metadata will be transferred to your live site instantly, preserving status (draft, scheduled, published, etc.).
 
-**Note:** Ensure that all ACF field groups, post types, and taxonomies used on the staging site are also present on the production site for proper content mapping and display.
+**Note:** Make sure all ACF field groups, post types, and taxonomies exist on both sites for proper mapping.
 
 === Frequently Asked Questions ===
 
 = Does this plugin sync content both ways? =
 
-No. Syncing is one-way — from the dev/staging site to the live/production site.
+No. Content is pushed one way only: from your staging/dev site to your production site.
 
 = Is the Receiver plugin required? =
 
-Yes. Easy StagePush Receiver must be installed and active on the destination site to receive and import content.
+Yes. Easy StagePush Receiver must be active on your production site to accept incoming posts.
 
-= What about security and authentication? =
+= Does the “Push to Live” button work for scheduled posts and drafts? =
 
-The current version uses an open REST endpoint for convenience. You may restrict access using authentication headers or IP whitelisting in future updates.
+Yes! The current post status (draft, published, scheduled, etc.) and post date are included in the push, so scheduled posts will remain scheduled on production.
 
-= Will it create duplicate media files? =
+= Is authentication required? =
 
-No. The plugin checks for existing media by filename and avoids re-uploading files.
+Currently, the REST endpoint is open for convenience. You can restrict access using authentication headers, IP whitelisting, or additional security measures as needed.
+
+= Will this create duplicate media? =
+
+No. The plugin references media files by URL, and the receiver checks for existing media by filename to avoid duplication.
 
 === Support ===
 
-If you have any questions, issues, or feature requests, please feel free to reach out at anandhu.natesh@gmail.com / anandhu.nadesh@gmail.com  
-If you want to contribute, please create an issue or submit a pull request on [Github](https://github.com/Macromaniak/easy-stagepush-sender).
+For support, questions, or feature requests, contact anandhu.natesh@gmail.com / anandhu.nadesh@gmail.com  
+Contributions are welcome on [GitHub](https://github.com/Macromaniak/easy-stagepush-sender).
 
 === License ===
 
-This plugin is licensed under the GPLv2 or later. You are free to use, modify, and distribute this plugin under the terms of the license.
+This plugin is licensed under GPLv2 or later. You are free to use, modify, and distribute this plugin under the terms of the license.
